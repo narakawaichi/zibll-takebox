@@ -1,5 +1,18 @@
 <?php
 /**
+ * 无子比主题时的原生设置页
+ *
+ * @package    Zibll_TakeBox
+ * @author     依岸归 <narakawaichi@hoarfall.cn>
+ * @copyright  Copyright (c) 2026, 依岸归
+ * @license    GPL-2.0-or-later
+ * @link       https://nav.hoarfall.cn/
+ *
+ * 本文件是自由软件，依据 GPL v2 或更高版本发布。
+ * 二次修改或再分发时，必须保留以上署名与许可声明。
+ */
+
+/**
  * 原生 WordPress 设置页（兼容非子比 / 未安装 Codestar Framework 的站点）。
  * 数据仍写入同一个 option key `zibll_takebox`，与 CSF 设置页完全互通。
  *
@@ -84,7 +97,7 @@ if (!function_exists('zibll_takebox_native_field_defs')) {
             'meta_enabled'  => array('title' => '增强媒体库信息', 'type' => 'switcher', 'desc' => '展示 上传于/上传者/文件名/类型/大小/分辨率/服务商/区域/权限。默认开。'),
             'multipart_threshold' => array('title' => '大文件分片上传阈值（MB）', 'type' => 'number', 'min' => 0, 'desc' => '文件超过该大小自动改用 Multipart 分片上传（0 = 关闭，默认关）。大视频/大文件建议设 50。'),
             'multipart_part_size'  => array('title' => '分片大小（MB）', 'type' => 'number', 'min' => 5, 'desc' => '每个分片大小，5~100，默认 10。'),
-            'webp_enabled'      => array('title' => '自动转 WebP', 'type' => 'switcher', 'desc' => '上传 JPG/PNG/GIF 时自动转为 WebP（体积更小）。独立于对象存储接管，可单独开启。'),
+            'webp_enabled'      => array('title' => '自动转 WebP', 'type' => 'switcher', 'desc' => '上传 JPG/PNG 时自动转为 WebP（体积更小）。GIF 不转换（动图转 WebP 会丢帧变成静图）。独立于对象存储接管，可单独开启。'),
             'webp_quality'      => array('title' => 'WebP 质量', 'type' => 'number', 'min' => 1, 'desc' => '1~100，默认 82。数值越高画质越好、体积越大。'),
             'webp_keep_original'=> array('title' => '保留原图', 'type' => 'switcher', 'desc' => '转 WebP 后是否保留原 JPG/PNG 文件。开启最稳妥（可回退），关闭省空间。'),
             'watermark_enabled' => array('title' => '图片水印', 'type' => 'switcher', 'desc' => '上传时给原图自动加水印（文字或图片）。独立于对象存储接管。'),
@@ -299,11 +312,7 @@ if (!function_exists('zibll_takebox_native_page_router')) {
         zibll_takebox_native_styles();
         ?>
         <div class="wrap zibll-tb-wrap">
-            <div class="zibll-tb-head">
-                <div class="zibll-tb-brand">Hoarfall 工具</div>
-                <h1>接管匣 TakeBox</h1>
-                <p class="zibll-tb-sub">原生兼容模式（未检测到子比主题的 Codestar Framework）。功能与子比主题下完全一致，数据互通。用上方标签页切换各板块。</p>
-            </div>
+            <?php hoarfall_admin_banner('接管匣 TakeBox', '原生兼容模式（未检测到子比主题的 Codestar Framework）· 功能与子比主题下完全一致，数据互通'); ?>
 
             <nav class="zibll-tb-tabs">
                 <?php foreach ($tabs as $k => $label) :
@@ -335,7 +344,7 @@ function zibll_takebox_render_tab($tab)
 
     if ('about' === $tab) {
         echo '<div class="zibll-tb-card"><h2 class="zibll-tb-card-title"><span class="zibll-tb-dot"></span>关于</h2>';
-        echo '<p>插件：接管匣 TakeBox（zibll-takebox）<br>作者：阿晨<br>网站：<a href="https://navigation.hoarfall.com/" target="_blank">navigation.hoarfall.com</a><br>邮箱：achen@hoarfall.com</p></div>';
+        echo '<p>插件：接管匣 TakeBox（zibll-takebox）<br>作者：依岸归<br>网站：<a href="https://nav.hoarfall.cn/" target="_blank">nav.hoarfall.cn</a><br>邮箱：narakawaichi@hoarfall.cn</p></div>';
         return;
     }
 

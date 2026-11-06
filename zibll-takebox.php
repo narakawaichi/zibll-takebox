@@ -1,14 +1,33 @@
 <?php
 /**
  * Plugin Name: 接管匣 TakeBox
- * Plugin URI: https://navigation.hoarfall.com/
+ * Plugin URI: https://nav.hoarfall.cn/
  * Description: 完整接管 WordPress 媒体库，把任何上传到媒体库的文件自动同步到对象存储（S3 兼容 / Cloudflare R2 / 阿里云 OSS），并补齐删除同步、双向同步、信息增强与 R2 专用体验。
- * Version: 1.2.4
- * Author: 阿晨
- * Author URI: https://navigation.hoarfall.com/about.html
+ * Version: 1.3.3
+ * Author: 依岸归
+ * Author URI: https://nav.hoarfall.cn/about
+ * Author Email: narakawaichi@hoarfall.cn
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * Text Domain: zibll-takebox
+ *
+ * License: GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ *
+ * Copyright (C) 2026 依岸归 (https://nav.hoarfall.cn/)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
 // 防止直接访问
@@ -24,7 +43,7 @@ if (!defined('ZIBLL_TAKEBOX_URL')) {
     define('ZIBLL_TAKEBOX_URL', plugin_dir_url(__FILE__));
 }
 if (!defined('ZIBLL_TAKEBOX_VERSION')) {
-    define('ZIBLL_TAKEBOX_VERSION', '1.2.4');
+    define('ZIBLL_TAKEBOX_VERSION', '1.3.2');
 }
 // 独立 option key（不写入 zibll_options）
 if (!defined('ZIBLL_TAKEBOX_OPTION')) {
@@ -54,8 +73,11 @@ if (!function_exists('zibll_takebox_get_option')) {
 if (!function_exists('zibll_takebox_is_enabled')) {
     function zibll_takebox_is_enabled()
     {
-        // 默认关闭：只有用户手动开启（master_switch=1）才接管媒体库，避免装上即接管的高风险。
-        return (bool) zibll_takebox_get_option('master_switch', 0);
+        // 1) 默认关闭：只有用户手动开启（master_switch=1）才接管媒体库，避免装上即接管的高风险。
+        if (!(bool) zibll_takebox_get_option('master_switch', 0)) {
+            return false;
+        }
+        return true;
     }
 }
 
@@ -75,6 +97,7 @@ if (!function_exists('zibll_takebox_boot')) {
     function zibll_takebox_boot()
     {
         $core = array(
+            'includes/attribution.php',
             'includes/brand-menu.php',
             'includes/admin-options.php',
             'includes/upload-takeover.php',

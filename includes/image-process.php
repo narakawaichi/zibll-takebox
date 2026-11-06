@@ -1,5 +1,18 @@
 <?php
 /**
+ * 图片处理流水线
+ *
+ * @package    Zibll_TakeBox
+ * @author     依岸归 <narakawaichi@hoarfall.cn>
+ * @copyright  Copyright (c) 2026, 依岸归
+ * @license    GPL-2.0-or-later
+ * @link       https://nav.hoarfall.cn/
+ *
+ * 本文件是自由软件，依据 GPL v2 或更高版本发布。
+ * 二次修改或再分发时，必须保留以上署名与许可声明。
+ */
+
+/**
  * 图片处理（接管匣 TakeBox）：自动转 WebP + 图片水印
  * 独立于「对象存储接管」总开关，各有自己的启用开关。
  * 执行顺序：水印（priority 3）→ WebP（priority 5）→ 接管上传（priority 10）。
@@ -47,6 +60,27 @@ if (!function_exists('zibll_takebox_convert_to_webp')) {
         $ext  = strtolower(pathinfo($src, PATHINFO_EXTENSION));
         $quality = max(1, min(100, (int) $quality));
 
+        // 产物有效性：文件存在、非空、且能被 getimagesize 识别为图片。
+        // GD 的 imagewebp() 存在静默失败：返回 true 但写出 0 字节文件（实测于
+        // 尺寸超 WebP 硬限制 16383px 的图，2026-11-06 站点碎图事故根因），
+        // 所以「函数返回 true」不足为凭，必须校验产物本身。
+        $dest_is_valid = function ($p) {
+            return is_string($p) && is_file($p) && filesize($p) > 0 && (bool) @getimagesize($p);
+        };
+        // 转换失败时清理残留产物（可能是 0 字节或半截文件），避免污染上传目录。
+        $drop_dest = function () use ($dest) {
+            if (is_file($dest)) {
+                @unlink($dest);
+            }
+        };
+
+        // 尺寸预检：WebP 格式硬限制 16383x16383，超限图直接跳过转换（保留原图），
+        // 不给 GD 静默失败的机会；宁可保留 jpg/png，也绝不产出 0 字节 webp。
+        $src_info = @getimagesize($src);
+        if ($src_info && ((int) $src_info[0] > 16383 || (int) $src_info[1] > 16383)) {
+            return false;
+        }
+
         // --- GD 路径 ---
         if ($lib['gd'] && $lib['webp']) {
             $img = false;
@@ -63,7 +97,11 @@ if (!function_exists('zibll_takebox_convert_to_webp')) {
                 imagesavealpha($img, true);
                 $ok = @imagewebp($img, $dest, $quality);
                 imagedestroy($img);
-                return $ok ? $dest : false;
+                if ($ok && $dest_is_valid($dest)) {
+                    return $dest;
+                }
+                // 假成功：删掉 0 字节/坏产物，落到 Imagick 兜底（若有）
+                $drop_dest();
             }
         }
 
@@ -76,8 +114,13 @@ if (!function_exists('zibll_takebox_convert_to_webp')) {
                 $ok = $im->writeImage($dest);
                 $im->clear();
                 $im->destroy();
-                return $ok ? $dest : false;
+                if ($ok && $dest_is_valid($dest)) {
+                    return $dest;
+                }
+                $drop_dest();
+                return false;
             } catch (Exception $e) {
+                $drop_dest();
                 return false;
             }
         }
@@ -108,8 +151,12 @@ if (!function_exists('zibll_takebox_webp_on_upload')) {
             return $metadata;
         }
         $mime = get_post_mime_type($attachment_id);
-        if (!in_array($mime, array('image/jpeg', 'image/png', 'image/gif'), true)) {
-            return $metadata; // 已 webp / avif / svg / 非图片 → 跳过
+        // 仅转换 JPG/PNG。GIF 一律不转（2026-10-16 修复）：
+        // ① GD 的 imagecreatefromgif() 对动图只读第一帧，转出的 webp 是静图，动画全丢；
+        // ② 转换后附件主文件与 MIME 被切到 webp，前端按 image/gif 判断的渲染逻辑会失效；
+        // ③ 关「保留原图」时原 GIF 被删，已发布内容里的旧地址直接 404。
+        if (!in_array($mime, array('image/jpeg', 'image/png'), true)) {
+            return $metadata; // GIF/webp/avif/svg/非图片 → 跳过
         }
 
         $converting[$attachment_id] = true;
@@ -136,7 +183,7 @@ if (!function_exists('zibll_takebox_webp_on_upload')) {
             wp_update_attachment_metadata($attachment_id, $new_metadata);
         }
 
-        // 不保留原图：删除原 jpg/png/gif 及其缩略图
+        // 不保留原图：删除原 jpg/png 及其缩略图
         if (!zibll_takebox_get_option('webp_keep_original', 1)) {
             @unlink($file);
             if (!empty($metadata['sizes']) && is_array($metadata['sizes'])) {

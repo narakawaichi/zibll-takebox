@@ -1,5 +1,18 @@
 <?php
 /**
+ * 文章正文内的链接重写
+ *
+ * @package    Zibll_TakeBox
+ * @author     依岸归 <narakawaichi@hoarfall.cn>
+ * @copyright  Copyright (c) 2026, 依岸归
+ * @license    GPL-2.0-or-later
+ * @link       https://nav.hoarfall.cn/
+ *
+ * 本文件是自由软件，依据 GPL v2 或更高版本发布。
+ * 二次修改或再分发时，必须保留以上署名与许可声明。
+ */
+
+/**
  * 正文 HTML 图片 URL 扫描替换（接管匣 TakeBox）
  * 把 post_content 中硬编码的本地 uploads 图片 URL 替换为 OSS 地址，
  * 让「接管前上传」的旧文章/论坛帖等内容也彻底上云。

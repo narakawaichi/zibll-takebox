@@ -1,5 +1,18 @@
 <?php
 /**
+ * 附件 URL 重写
+ *
+ * @package    Zibll_TakeBox
+ * @author     依岸归 <narakawaichi@hoarfall.cn>
+ * @copyright  Copyright (c) 2026, 依岸归
+ * @license    GPL-2.0-or-later
+ * @link       https://nav.hoarfall.cn/
+ *
+ * 本文件是自由软件，依据 GPL v2 或更高版本发布。
+ * 二次修改或再分发时，必须保留以上署名与许可声明。
+ */
+
+/**
  * URL 改写（接管匣 TakeBox）
  * 必须走过滤器层（而非只替换 HTML），否则主题海报/下载/用户资料/后台字段会读旧地址。
  */

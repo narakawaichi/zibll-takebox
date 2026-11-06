@@ -1,3 +1,11 @@
+/*
+ * 接管匣 TakeBox
+ * Copyright (C) 2026 依岸归
+ * Licensed under GNU GPL v2 or later
+ * https://nav.hoarfall.cn/
+ * fp:fb3b6c2a6ca4cb1d
+ */
+
 /* 接管匣 TakeBox — 工具区（正文改写 + 孤儿清理）交互 */
 jQuery(function ($) {
     if (typeof zmaTools === 'undefined') {

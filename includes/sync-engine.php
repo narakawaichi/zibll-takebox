@@ -1,5 +1,18 @@
 <?php
 /**
+ * 上传同步引擎
+ *
+ * @package    Zibll_TakeBox
+ * @author     依岸归 <narakawaichi@hoarfall.cn>
+ * @copyright  Copyright (c) 2026, 依岸归
+ * @license    GPL-2.0-or-later
+ * @link       https://nav.hoarfall.cn/
+ *
+ * 本文件是自由软件，依据 GPL v2 或更高版本发布。
+ * 二次修改或再分发时，必须保留以上署名与许可声明。
+ */
+
+/**
  * 双向同步引擎（接管匣 TakeBox）里程碑 6
  * 手动触发 → WP Cron 后台分批（关页不中断）→ 进度 → 完成后台通知（+可选邮件）
  * 差异比对：本地有/桶无 → 上传(forward)；桶有/本地无 → 反向导入(reverse)；已存在 → 跳过

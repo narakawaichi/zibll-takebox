@@ -1,3 +1,11 @@
+/*
+ * 接管匣 TakeBox
+ * Copyright (C) 2026 依岸归
+ * Licensed under GNU GPL v2 or later
+ * https://nav.hoarfall.cn/
+ * fp:fb3b6c2a6ca4cb1d
+ */
+
 /* 接管匣 TakeBox — 连接测试（验证自定义域名 / 端点是否真正可用）
  * 仅在本插件设置页加载。通过 name 选择器兼容 CSF 与原生设置页。 */
 (function ($) {

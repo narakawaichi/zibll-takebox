@@ -1,5 +1,18 @@
 <?php
 /**
+ * 后台 Ajax 请求处理
+ *
+ * @package    Zibll_TakeBox
+ * @author     依岸归 <narakawaichi@hoarfall.cn>
+ * @copyright  Copyright (c) 2026, 依岸归
+ * @license    GPL-2.0-or-later
+ * @link       https://nav.hoarfall.cn/
+ *
+ * 本文件是自由软件，依据 GPL v2 或更高版本发布。
+ * 二次修改或再分发时，必须保留以上署名与许可声明。
+ */
+
+/**
  * 后台 Ajax（接管匣 TakeBox）
  * 里程碑 5：R2「连接并获取存储桶」——粘贴令牌 → ListBuckets（SigV4 region=auto）
  * → 自动从 endpoint 推导 account id → 返回 bucket 列表供点选。

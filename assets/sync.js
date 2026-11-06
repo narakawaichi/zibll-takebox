@@ -1,3 +1,11 @@
+/*
+ * 接管匣 TakeBox
+ * Copyright (C) 2026 依岸归
+ * Licensed under GNU GPL v2 or later
+ * https://nav.hoarfall.cn/
+ * fp:fb3b6c2a6ca4cb1d
+ */
+
 /* 接管匣 TakeBox — 双向同步 UI（里程碑 6）
  * 仅在本插件设置页加载。触发后由 WP Cron 后台运行，本脚本仅轮询进度。 */
 (function ($) {

@@ -1,0 +1,196 @@
+/*
+ * 接管匣 TakeBox
+ * Copyright (C) 2026 依岸归
+ * Licensed under GNU GPL v2 or later
+ * https://nav.hoarfall.cn/
+ * fp:fb3b6c2a6ca4cb1d
+ */
+
+/**
+ * 依岸归后台品牌样式（Hoarfall Admin Brand）
+ * ─────────────────────────────────────────────────────────────
+ * 由 brand-menu.php 统一 enqueue（handle: hoarfall-admin-brand），
+ * 多插件同时激活时 WordPress 自动去重，全后台只加载一次。
+ *
+ * 作用范围（只改外观，不碰父主题 / CSF 框架文件，主题更新不会丢）：
+ *   1) CSF 面板横幅品牌化 —— 与子主题 assets/css/admin-brand.css 规则一致
+ *   2) 原生表单页的品牌横幅 .hoarfall-banner
+ *   3) 页内分级导航 .hoarfall-nav / .hoarfall-page
+ *
+ * ⚠️ CSF 部分必须与子主题保持同步：父主题原渐变是深色系（#f97794 → #623aa2），
+ *    它把横幅标题 / 水印 / 搜索框文字全设成了白色。换成 #FBC2EB → #A6C1EE
+ *    这种浅色渐变后白字会几乎不可见，所以下面这几处一并压深 —— 属必要改动。
+ *
+ * @package Hoarfall
+ */
+
+/* ═══════════════════════════════════════════════════════════
+ * 1. CSF 面板横幅（覆盖父主题 codestar-framework + csf-framework）
+ * ═══════════════════════════════════════════════════════════ */
+
+/* 顶部横幅渐变：粉 → 蓝紫 */
+body.wp-admin .csf-theme-light .csf-header-inner {
+    background: linear-gradient(135deg, #FBC2EB, #A6C1EE) !important;
+}
+
+/* 水印文字：ZIBLL → 依岸归（父主题用 CSS 伪元素实现，替换 content 即可，无需素材） */
+body.wp-admin .csf-theme-light .csf-header-inner::before {
+    content: '依岸归' !important;
+    color: rgba(59, 52, 85, 0.08) !important;
+}
+
+/* 横幅标题改深色 */
+body.wp-admin .csf-header-inner h1 {
+    color: #3b3455 !important;
+}
+
+body.wp-admin .csf-theme-light .csf-header-inner h1 small {
+    color: rgba(59, 52, 85, 0.7) !important;
+}
+
+/* 搜索框同步改深色 */
+body.wp-admin .csf-theme-light .csf-search input {
+    color: #3b3455 !important;
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    border-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+body.wp-admin .csf-theme-light .csf-search input::placeholder {
+    color: rgba(59, 52, 85, 0.55) !important;
+}
+
+body.wp-admin .csf-theme-light .csf-search input::-webkit-input-placeholder {
+    color: rgba(59, 52, 85, 0.55) !important;
+}
+
+/* 「显示全部设置」图标 hover 色 */
+body.wp-admin .csf-theme-light .csf-expand-all:hover {
+    color: #3b3455 !important;
+}
+
+/* 水印裁剪：父主题 .csf-sticky .csf-header-inner 会变 position:fixed，
+   而 fixed 元素不受祖先 overflow:hidden 裁剪，滚动时水印会溢出横幅。
+   两个状态各由一条规则兜住；绝不能给 .csf-header-inner 补 position:relative
+   （那会盖掉 sticky 的 fixed 定位，把吸顶功能弄坏）。 */
+body.wp-admin .csf-theme-light .csf-header {
+    overflow: hidden;
+}
+
+body.wp-admin .csf-theme-light .csf-header-inner {
+    overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════
+ * 2. 原生表单页品牌横幅
+ * ═══════════════════════════════════════════════════════════ */
+
+.hoarfall-banner {
+    position: relative;
+    overflow: hidden;
+    margin: 0 0 16px;
+    padding: 18px 24px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #FBC2EB, #A6C1EE);
+    color: #3b3455;
+}
+
+.hoarfall-banner::after {
+    content: '依岸归';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-8deg);
+    font-size: 38px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: rgba(59, 52, 85, 0.09);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.hoarfall-banner__title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #3b3455;
+}
+
+.hoarfall-banner__sub {
+    margin: 4px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(59, 52, 85, 0.75);
+}
+
+/* ═══════════════════════════════════════════════════════════
+ * 3. 页内分级导航
+ * ═══════════════════════════════════════════════════════════ */
+
+.hoarfall-page {
+    display: grid;
+    grid-template-columns: 210px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+    margin-bottom: 24px;
+}
+
+@media screen and (max-width: 782px) {
+    .hoarfall-page {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hoarfall-nav {
+    background: #fff;
+    border: 1px solid #e2e4e7;
+    border-radius: 10px;
+    padding: 8px;
+    position: sticky;
+    top: 46px;
+}
+
+.hoarfall-nav__group {
+    padding: 10px 12px 6px;
+    font-size: 12px;
+    color: #646970;
+    letter-spacing: 0.4px;
+}
+
+.hoarfall-nav__link {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.4;
+    text-decoration: none;
+    color: #3b3455;
+    transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.hoarfall-nav__link:hover,
+.hoarfall-nav__link:focus {
+    background: #f6f7f7;
+    color: #185FA5;
+    box-shadow: none;
+}
+
+.hoarfall-nav__link.is-active {
+    background: #E6F1FB;
+    color: #185FA5;
+    font-weight: 500;
+}
+
+.hoarfall-content {
+    min-width: 0;
+}
+
+/* 内容区里的原生 .wrap 在骨架内不再重复留白 */
+.hoarfall-content .wrap,
+.hoarfall-content h1 {
+    margin-top: 0;
+}
+
+.hoarfall-content > h1 {
+    display: none;
+}

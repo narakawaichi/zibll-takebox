@@ -1,3 +1,11 @@
+/*
+ * 接管匣 TakeBox
+ * Copyright (C) 2026 依岸归
+ * Licensed under GNU GPL v2 or later
+ * https://nav.hoarfall.cn/
+ * fp:fb3b6c2a6ca4cb1d
+ */
+
 /* 接管匣 TakeBox — R2 专用连接 UI（里程碑 5，增强：Account ID 一键推导端点）
  * 仅在本插件设置页加载。通过 name 选择器同时兼容 CSF 与原生设置页。 */
 (function ($) {

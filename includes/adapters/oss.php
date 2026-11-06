@@ -59,6 +59,11 @@ if (!class_exists('Zibll_Takebox_OSS_Adapter')) {
 
         public function upload($local_path, $object_key, $acl = 'public-read')
         {
+            // 防御：0 字节 / 不存在的文件绝不上传（防止坏产物静默覆盖桶里的好对象）。
+            $fsz = @filesize($local_path);
+            if (false === $fsz || $fsz <= 0) {
+                return false;
+            }
             if ($this->should_multipart($local_path)) {
                 return $this->multipart_upload($local_path, $object_key, $acl);
             }

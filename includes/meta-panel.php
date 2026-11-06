@@ -1,5 +1,18 @@
 <?php
 /**
+ * 媒体编辑页信息面板
+ *
+ * @package    Zibll_TakeBox
+ * @author     依岸归 <narakawaichi@hoarfall.cn>
+ * @copyright  Copyright (c) 2026, 依岸归
+ * @license    GPL-2.0-or-later
+ * @link       https://nav.hoarfall.cn/
+ *
+ * 本文件是自由软件，依据 GPL v2 或更高版本发布。
+ * 二次修改或再分发时，必须保留以上署名与许可声明。
+ */
+
+/**
  * 媒体库信息面板增强 + 逐文件权限切换（接管匣 TakeBox）
  * 在附件详情页展示：上传于 / 上传者 / 文件名 / 文件类型 / 文件大小 / 分辨率 / 服务商 / 区域 / 访问权限。
  * 仅对已被接管的附件显示（有 _zibll_takebox_provider meta）。

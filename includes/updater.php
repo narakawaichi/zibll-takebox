@@ -1,5 +1,18 @@
 <?php
 /**
+ * 插件自托管更新检查
+ *
+ * @package    Zibll_TakeBox
+ * @author     依岸归 <narakawaichi@hoarfall.cn>
+ * @copyright  Copyright (c) 2026, 依岸归
+ * @license    GPL-2.0-or-later
+ * @link       https://nav.hoarfall.cn/
+ *
+ * 本文件是自由软件，依据 GPL v2 或更高版本发布。
+ * 二次修改或再分发时，必须保留以上署名与许可声明。
+ */
+
+/**
  * GitHub Releases 在线更新（接管匣 TakeBox）
  * 从 GitHub 仓库的 Releases 检测新版本，注入 WordPress 插件更新流程，
  * 支持后台「立即更新 / 自动更新」。
@@ -31,7 +44,7 @@ if (!class_exists('Zibll_Takebox_Updater')) {
             $this->slug     = 'zibll-takebox';
             $this->basename = $this->slug . '/' . $this->slug . '.php';
 
-            // 更新源写死（阿晨自用，仓库固定），不再读设置项，避免误填导致检测失败
+            // 更新源写死（依岸归自用，仓库固定），不再读设置项，避免误填导致检测失败
             $this->repo      = defined('ZIBLL_TAKEBOX_UPDATE_REPO') ? ZIBLL_TAKEBOX_UPDATE_REPO : '';
             $this->cache_key = 'zibll_takebox_release_' . md5($this->repo);
 
@@ -127,9 +140,9 @@ if (!class_exists('Zibll_Takebox_Updater')) {
                 'name'          => '接管匣 TakeBox',
                 'slug'          => $this->slug,
                 'version'       => $release['version'],
-                'author'        => '阿晨',
-                'author_profile'=> 'https://navigation.hoarfall.com/about.html',
-                'homepage'      => 'https://navigation.hoarfall.com/',
+                'author'        => '依岸归',
+                'author_profile'=> 'https://nav.hoarfall.cn/about',
+                'homepage'      => 'https://nav.hoarfall.cn/',
                 'requires'      => '5.8',
                 'tested'        => '',
                 'requires_php'  => '7.4',

@@ -1,5 +1,18 @@
 <?php
 /**
+ * 后台 CSF 设置页注册
+ *
+ * @package    Zibll_TakeBox
+ * @author     依岸归 <narakawaichi@hoarfall.cn>
+ * @copyright  Copyright (c) 2026, 依岸归
+ * @license    GPL-2.0-or-later
+ * @link       https://nav.hoarfall.cn/
+ *
+ * 本文件是自由软件，依据 GPL v2 或更高版本发布。
+ * 二次修改或再分发时，必须保留以上署名与许可声明。
+ */
+
+/**
  * 后台设置页（基于子比主题 Codestar Framework）。
  * 仅在子比主题加载完成后（init）注册，使用独立 option key，不写入 zibll_options。
  * 非子比主题时本文件不创建菜单，交由 settings-native.php 注册原生页。
@@ -317,7 +330,7 @@ if (!function_exists('zibll_takebox_create_options')) {
                     'id'      => 'webp_enabled',
                     'type'    => 'switcher',
                     'title'   => '自动转 WebP',
-                    'desc'    => '上传 JPG/PNG/GIF 时自动转为 WebP（体积更小）。独立于对象存储接管，可单独开启。',
+                    'desc'    => '上传 JPG/PNG 时自动转为 WebP（体积更小）。GIF 不转换（动图转 WebP 会丢帧变成静图）。独立于对象存储接管，可单独开启。',
                     'default' => false,
                 ),
                 array(
@@ -471,7 +484,7 @@ if (!function_exists('zibll_takebox_create_options')) {
                     'id'     => 'about_content',
                     'type'   => 'content',
                     'title'  => '开发者',
-                    'content' => '作者：阿晨<br>网站：<a href="https://navigation.hoarfall.com/" target="_blank">navigation.hoarfall.com</a><br>邮箱：achen@hoarfall.com',
+                    'content' => '作者：依岸归<br>网站：<a href="https://nav.hoarfall.cn/" target="_blank">nav.hoarfall.cn</a><br>邮箱：narakawaichi@hoarfall.cn',
                 ),
             ),
         ));
@@ -482,6 +495,8 @@ add_action('init', 'zibll_takebox_create_options');
 
 // 把 CSF 创建的独立顶级菜单“重定父”到「Hoarfall 工具」下
 // （用 WP 原生菜单数组操作，绕过 CSF 的 submenu 父级参数名差异）
+// 注意：只转换顶级菜单项为标准子菜单格式后移入，绝不遍历/平铺 $submenu[$child]，
+// 避免把页内 section 子菜单/后台内部菜单项带出造成菜单混乱或 404。
 if (!function_exists('zibll_takebox_reparent_menu')) {
     function zibll_takebox_reparent_menu()
     {
@@ -499,7 +514,12 @@ if (!function_exists('zibll_takebox_reparent_menu')) {
                 if (!isset($submenu[$top]) || !is_array($submenu[$top])) {
                     $submenu[$top] = array();
                 }
-                $submenu[$top][] = $item;
+                $submenu[$top][] = array(
+                    isset($item[0]) ? $item[0] : $child,
+                    isset($item[1]) ? $item[1] : 'manage_options',
+                    $child,
+                    isset($item[5]) ? $item[5] : '',
+                );
                 unset($menu[$k]);
                 break;
             }
