@@ -3,7 +3,7 @@
  * Plugin Name: 接管匣 TakeBox
  * Plugin URI: https://nav.hoarfall.cn/
  * Description: 完整接管 WordPress 媒体库，把任何上传到媒体库的文件自动同步到对象存储（S3 兼容 / Cloudflare R2 / 阿里云 OSS），并补齐删除同步、双向同步、信息增强与 R2 专用体验。
- * Version: 1.3.3
+ * Version: 1.3.4
  * Author: 依岸归
  * Author URI: https://nav.hoarfall.cn/about
  * Author Email: narakawaichi@hoarfall.cn

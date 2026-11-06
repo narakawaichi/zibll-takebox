@@ -92,6 +92,12 @@ if (!function_exists('zibll_takebox_convert_to_webp')) {
                 $img = @imagecreatefromjpeg($src);
             }
             if ($img) {
+                // 调色板图（PNG-8）必须先转真彩色：GD 的 imagewebp() 对调色板源
+                // 会静默失败——返回 true 但写出 0 字节文件（2026-11-06 碎图事故
+                // 根因，服务器实测复现：palette png → ok=true size=0）。
+                if (function_exists('imagepalettetotruecolor') && !imageistruecolor($img)) {
+                    imagepalettetotruecolor($img);
+                }
                 // 保留透明度（png/gif 可能带 alpha）
                 imagealphablending($img, true);
                 imagesavealpha($img, true);
